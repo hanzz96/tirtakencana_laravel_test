@@ -25,6 +25,26 @@
 
 ## 🚀 Installation & Setup
 
+``composer install``
+
+``cp .env.example .env``
+
+``php artisan key:generate``
+
+### Database setup
+
+DB_CONNECTION=mysql
+
+DB_HOST=127.0.0.1
+
+DB_PORT=3306
+
+DB_DATABASE=gift_management
+
+DB_USERNAME=your_username
+
+DB_PASSWORD=your_password
+
 Please look import file json ``API.postman_collection.json`` using **Postman**
 
 ### Prerequisites
@@ -32,3 +52,4 @@ Please look import file json ``API.postman_collection.json`` using **Postman**
 - Composer
 - MySQL
 - Laravel 8.75
+
