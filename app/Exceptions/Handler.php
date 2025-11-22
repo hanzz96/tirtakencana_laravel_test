@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use ErrorException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -49,16 +50,22 @@ class Handler extends ExceptionHandler
         // Intended / general exceptions (400)
         $this->renderable(function (\Exception $e, $request) {
             if ($request->is('api/*')) {
-                
+                $statusCode = 400;
+                $message = $e->getMessage();
                 if($e instanceof ErrorException){
                     return $this->handleInternalServerError($e);
                 }
 
+                if($e instanceof NotFoundHttpException) {
+                    $statusCode = 404;
+                    $message = 'Http not found';
+                }
+
                 return response()->json([
-                    'code'    => 400,
-                    'message' => $e->getMessage(),
+                    'code'    => $statusCode,
+                    'message' => $message,
                     'trace'   => config('app.debug') ? collect($e->getTrace())->take(5) : null,
-                ], 400);
+                ], $statusCode);
             }
         });
 
