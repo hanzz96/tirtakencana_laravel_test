@@ -60,7 +60,7 @@ class GiftController extends Controller
             'cust_id' => 'required',
             'action' => 'required|in:terima,tolak',
             'failed_reason' => 'required_if:action,tolak',
-            'tth_numbers' => 'required|array'
+            'tt_otp_numbers' => 'required|array'
         ]);
 
         DB::beginTransaction();
@@ -68,13 +68,13 @@ class GiftController extends Controller
             $currentDate = now()->toDateString();
             $action = $request->action;
             $custId = $request->cust_id;
-            $tthNumbers = $request->tth_numbers;
+            $ttotpNumbers = $request->tt_otp_numbers;
             $failedReason = $request->failed_reason;
 
-            foreach ($tthNumbers as $tthNo) {
+            foreach ($ttotpNumbers as $tthNo) {
                 // Cek apakah data TTH exists
                 $tthExists = DB::table(CustomerTTH::getTableWithSchema('t'))
-                    ->where('TTHNo', $tthNo)
+                    ->where('TTOTTPNo', $tthNo)
                     ->where('CustID', $custId)
                     ->exists();
 
@@ -82,7 +82,7 @@ class GiftController extends Controller
                     if ($action === 'terima') {
                         // Jika terima, update received = 1 dan received date
                         DB::table(CustomerTTH::getTableWithSchema('t'))
-                            ->where('TTHNo', $tthNo)
+                            ->where('TTOTTPNo', $tthNo)
                             ->where('CustID', $custId)
                             ->update([
                                 'Received' => 1,
@@ -92,7 +92,7 @@ class GiftController extends Controller
                     } else {
                         // Jika tolak, update received = 0 dan failed reason
                         DB::table(CustomerTTH::getTableWithSchema('t'))
-                            ->where('TTHNo', $tthNo)
+                            ->where('TTOTTPNo', $tthNo)
                             ->where('CustID', $custId)
                             ->update([
                                 'Received' => 0,
