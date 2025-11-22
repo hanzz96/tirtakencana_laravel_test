@@ -15,4 +15,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/gift-summary', [GiftController::class, 'getGiftSummary']);
     Route::post('/gift-confirmation', [GiftController::class, 'confirmGift']);
     Route::put('/gift-update/{id}', [GiftController::class, 'updateGiftStatus']);
+    Route::get('/test-connection', [CustomerController::class, 'testConnection']);
 });
