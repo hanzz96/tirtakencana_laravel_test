@@ -25,10 +25,6 @@ class CustomerController extends Controller
                 'c.PhoneNo'
             )
             ->leftJoin(CustomerTTH::getTableWithSchema('t'), 'c.CustID', '=', 't.CustID')
-            ->where(function ($q) {
-                $q->where('t.Received', 0)
-                  ->orWhereNull('t.Received');
-            })
             ->groupBy(
                 'c.CustID',
                 'c.Name',
@@ -50,9 +46,6 @@ class CustomerController extends Controller
             // Get TTH docs
             $tthData = DB::table(CustomerTTH::getTableWithSchema('t'))
                 ->where('t.CustID', $customer->CustID)
-                ->where(function ($q) {
-                    $q->where('t.Received', 0)->orWhereNull('t.Received');
-                })
                 ->get()
                 ->map(function ($tth) {
                     $status = $this->determineStatus($tth->Received, $tth->FailedReason);
@@ -162,7 +155,7 @@ class CustomerController extends Controller
     public function testConnection()
     {
         try {
-            $result = DB::table('dbo.Customer')->limit(1)->get();
+            $result = DB::table(Customer::getTableWithSchema('c'))->limit(1)->get();
             
             return response()->json([
                 'success' => true,
