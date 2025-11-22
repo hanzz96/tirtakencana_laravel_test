@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "4046fddb-7101-41d7-8027-62b7cdc29fbf",
+		"name": "Customer Gift Management API",
+		"description": "API untuk management customer dan hadiah dengan konfirmasi terima/tolak",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2052856"
+	},
+	"item": [
+		{
+			"name": "Customer APIs",
+			"item": [
+				{
+					"name": "Get All Customers with Filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customers?shop_name=Semua Toko",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "shop_name",
+									"value": "Semua Toko"
+								}
+							]
+						},
+						"description": "Mendapatkan list customer dengan filter nama toko"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer Filter Options",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customer-filter-options",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"customer-filter-options"
+							]
+						},
+						"description": "Mendapatkan opsi filter untuk dropdown nama toko"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gift APIs",
+			"item": [
+				{
+					"name": "Get Gift Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/gift-summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"gift-summary"
+							]
+						},
+						"description": "Mendapatkan rekapan total hadiah (tidak terpengaruh filter toko)"
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Gift (Terima/Tolak)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cust_id\": \"CUST001\",\n  \"action\": \"terima\",\n  \"failed_reason\": \"\",\n  \"tth_numbers\": [\"TTOL-00A-2306-90081\", \"TTOL-00A-2306-90082\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/gift-confirmation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"gift-confirmation"
+							]
+						},
+						"description": "Konfirmasi terima/tolak hadiah untuk customer"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "your_api_token_here",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"console.log('Running request: ' + pm.request.name);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"",
+					"pm.test(\"Response has success flag\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData.success).to.be.true;",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
